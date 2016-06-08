@@ -1,0 +1,54 @@
+<% layout('/layout/page') -%>
+<% block ('title', title); %>
+<% block ('keywords', meta_k); %>
+<% block ('description', meta_d); %>
+<% block ('header','yes');%>
+<link rel="stylesheet" href="/vendor/bower_components/jquery-ui/themes/smoothness/jquery-ui.css">
+<link rel="stylesheet" href="/vendor/bower_components/kemoji/css/emoji.css">
+<link rel="stylesheet" href="/vendor/bower_components/kemoji/css/smiles.css">
+<link rel="stylesheet" href="/vendor/bower_components/scroll/css/jquery.jscrollpane.css">
+
+
+<div class='col-md-8 col-md-offset-2' id='container'>
+	<div id="resizable" class="ui-widget-content">
+		<div class='container-mess'>
+		<%if (messages=='none'){%>
+			<p class='none'>Здесь будет история переписки</p>
+		<%}else{%>
+
+			<div class='col-md-12 wrap-mess'>
+			<%messages.forEach(function(item, i, arr){%>
+				<div class='col-md-8 col-md-offset-2 message'>
+					<p><%-item.name%></p>
+					<p><%-item.message%></p>
+				</div>
+			<%})%>
+			</div>
+		<%}%>
+		</div>
+	
+		<div class='row footer-resize'>
+			<div class='col-md-2 col-xs-2 wrap-text'>
+				<img src='images/avatar.jpg' class='avatar'/> 
+			</div>
+			<div class='col-md-8 col-xs-8 wrap-text'>
+				<div class='text' id="myEmoji"></div>
+				<div class='col-md-3 col-sm-4 col-xs-6 wrap-text'>
+					<input type='hidden' id='id_user' value='<%-user.id%>'/>
+					<button type="button" id='submitMessage' class="btn btn-primary btn-xs btn-block">Отправить</button>
+				</div>
+			</div>
+			<div class='col-md-2 col-xs-2 wrap-text'>
+				<img src='images/avatar.jpg' class='avatar'/> 
+			</div>
+
+		</div>
+	</div>
+
+</div>
+
+
+<script type="text/javascript" src='/vendor/bower_components/scroll/js/jquery.jscrollpane.min.js'></script>
+<script type="text/javascript" src='/vendor/bower_components/scroll/js/jquery.mousewheel.js'></script>
+<script type="text/javascript" src='/vendor/bower_components/kemoji/kemoji.js'></script>
+<script type="text/javascript" src='/js/scriptKlient.js'></script>

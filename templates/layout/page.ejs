@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+    <meta name="keywords" content="<%= blocks.keywords %>">
+    <meta name="desription" content="<%= blocks.description %>">
+    <title><%= blocks.title %></title>
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link href='https://fonts.googleapis.com/css?family=Tenor+Sans&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="/vendor/bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/vendor/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <script src="/vendor/bower_components/jquery/dist/jquery.js"></script>
+    <script src="/vendor/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="/vendor/bower_components/jquery-ui/jquery-ui.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/jquery.cookie.js"></script>
+    <script src="/js/script.js"></script>
+  </head>
+  <body>
+    <div class="container-fuild">
+    <% if (blocks.header=='yes') {%>
+      <%-partial('../partials/top')%>
+    <%}%>
+    	<div class='col-md-10 col-md-offset-1 main'>
+      	<%-body%>
+      </div>
+      <div class='clearfix'></div>
+    </div>
+
+    
+      <%-partial('../partials/bottom')%>
+ 
+  </body>
+
+  <script>
+      var socket = io('http://localhost:7000');
+
+  </script>
+
+
+</html>
