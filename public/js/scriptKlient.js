@@ -15,7 +15,9 @@ $(document).ready(function(){
 
 
 	var pane = $('.wrap-mess');
-		pane.jScrollPane();
+		pane.jScrollPane({
+		   contentWidth: '0px'
+		});
 	var api = pane.data('jsp');
 		api.scrollTo(0,10000);
 
@@ -43,6 +45,7 @@ $(document).ready(function(){
 		var input = $('.KEmoji_Block .KEmoji_Input > div[contenteditable=true]');
 		var message = input.html();
 		var id_sender = $('#id_user').val();
+		if (message.replace(/<\/?[^>]+>/g,'')!='')
 		$.ajax({
 			type:'POST',
 			url:'/addmessage',
@@ -51,14 +54,24 @@ $(document).ready(function(){
 				message:message
 			},
 			success:function(data){
-				if (data=='success')
+				if (data.result=='success')
 				{
 					input.html('');
-					socket.emit('message',{ id_sender : id_sender, message : message });
+					socket.emit('message',{ id_sender : id_sender, message : message, date: data.date });
 				}
 			}
 		})
 	})
+
+
+
+	$('.KEmoji_Block .KEmoji_Input > div[contenteditable=true]').keypress(function (e) {
+                e = e || window.event;
+                if (e.keyCode === 13 && e.shiftKey) {
+                    $('#submitMessage').click();
+                }
+            })
+   
 
 	$( "#resizable" ).resize(function(){
         api.reinitialise();
@@ -73,7 +86,8 @@ $(document).ready(function(){
 
 	socket.on('message', function(msg){
       		var id_sender = msg.id_sender,
-      			message = msg.message;
+      			message = msg.message,
+      			date = msg.date;
       		$.ajax({
       			type:'POST',
       			url:'/getuserinfo',
@@ -82,8 +96,15 @@ $(document).ready(function(){
       				if (data!='error')
       				{
       					var html="<div class='col-md-8 col-md-offset-2 message'>";
-						html+="<p>"+data.name+"</p>";
+      					html+="<div class='col-xs-2 wrap-text'>";
+						html+="<img src='"+data.image+"' class='avatar'/>";
+						html+="</div>";
+						html+="<div class='col-xs-10'>";
+						html+="<span class='name'>"+data.name+"</span>";
+						html+="<span class='date'>"+date+"</span>";
 						html+="<p>"+message+"</p>";
+						html+="</div>";
+						html+="<div class='clearfix'></div>";
 						html+="</div>";
       					$(html).appendTo('.jspPane');
                     	api.reinitialise();

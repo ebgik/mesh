@@ -19,8 +19,15 @@
 			<div class='col-md-12 wrap-mess'>
 			<%messages.forEach(function(item, i, arr){%>
 				<div class='col-md-8 col-md-offset-2 message'>
-					<p><%-item.name%></p>
-					<p><%-item.message%></p>
+					<div class='col-xs-2 wrap-text'>
+						<img src='<%-item.image%>' class='avatar'/> 
+					</div>
+					<div class='col-xs-10'>
+						<span class='name'><%-item.name%></span>
+						<span class='date'><%-item.date_time%></span>
+						<p><%-item.message%></p>
+					</div>
+					<div class='clearfix'></div>
 				</div>
 			<%})%>
 			</div>
@@ -29,7 +36,7 @@
 	
 		<div class='row footer-resize'>
 			<div class='col-md-2 col-xs-2 wrap-text'>
-				<img src='images/avatar.jpg' class='avatar'/> 
+				<img src='<%-user.image%>' class='avatar marg'/> 
 			</div>
 			<div class='col-md-8 col-xs-8 wrap-text'>
 				<div class='text' id="myEmoji"></div>
@@ -39,7 +46,7 @@
 				</div>
 			</div>
 			<div class='col-md-2 col-xs-2 wrap-text'>
-				<img src='images/avatar.jpg' class='avatar'/> 
+				<img src='images/avatar.jpg' class='avatar marg'/> 
 			</div>
 
 		</div>
