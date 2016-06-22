@@ -13,7 +13,7 @@ $(document).ready(function(){
 				if (data.user!='not_user'&&data.session!='none')
 				{
 					$.cookie('session',data.session);
-					document.location.href = '/main';
+					document.location.href = '/messages';
 				}
 				else
 				{

@@ -9,7 +9,7 @@ module.exports = function(app) {
   app.get('/',function(req,res,next){
     if (req.cookies.session&&req.cookies.session!='null')
         {
-          res.writeHead(302, { 'Location': '/main'});
+          res.writeHead(302, { 'Location': '/messages'});
           res.end();
         }
     else
@@ -47,7 +47,7 @@ module.exports = function(app) {
       })
   })
 
-  app.get('/main',function(req,res,next){
+  app.get('/messages',function(req,res,next){
       if (req.cookies.session&&req.cookies.session!='null')
       {
         user.checkSession(req.cookies.session,function(resultUser){
@@ -57,21 +57,27 @@ module.exports = function(app) {
                   else
                     if (result=='none') next();
                     else
-                    message.getMessages(20,function(errMess,resMess){
-                    if (err) next(new Error('problem BD'));
-                      else
-                      {
-                        console.log(resMess)
-                        res.render('main',{
-                          title : result.title,
-                          meta_k : result.keywords,
-                          meta_d : result.description,
-                          user : resultUser[0],
-                          messages:resMess
-                        });
-                      }
-                      
-                    }) 
+                    {
+                      if (req.query.sel)
+                      user.getUserInfo(req.query.sel,function(resUser){
+                        if (resUser=='error') next();
+                        else
+                          message.getMessages(resultUser[0].id,req.query.sel,function(errMess,resMess){
+                          if (errMess) next(new Error('problem BD'));
+                            else
+                              res.render('messages',{
+                                title : result.title,
+                                meta_k : result.keywords,
+                                meta_d : result.description,
+                                user : resultUser[0],
+                                sel : resUser,
+                                messages : resMess
+                              });                      
+                          })
+                      })
+                      else next();
+                    }
+                     
                   })
             else next(new Error('problem BD'));
         })
@@ -83,11 +89,20 @@ module.exports = function(app) {
       }
   }) 
 
-  
   app.post('/addmessage',function(req,res,next){
       var id_sender = req.body.id_sender,
+          id_sel = req.body.id_sel,
           messageText = req.body.message;
-      message.addMessage(id_sender,messageText,function(result){
+      message.addMessage(id_sender,id_sel,messageText,function(result){
+        res.send(result);
+      })
+  })
+
+
+  app.post('/readingmess',function(req,res,next){
+      var id_sender = req.body.id_sender,
+          id_sel = req.body.id_sel;
+      message.reading(id_sender,id_sel,function(result){
         res.send(result);
       })
   })
@@ -95,8 +110,18 @@ module.exports = function(app) {
   app.post('/getuserinfo',function(req,res,next){
     var id = req.body.id;
     user.getUserInfo(id,function(result){
-      console.log(result)
+      //console.log(result)
       res.send(result);
+    })
+  })
+
+
+  app.post('/addsocket',function(req,res,next){
+    var cook = req.body.cook,
+        sock = req.body.sock;
+    user.addSocket(cook,sock,function(err,result){
+      if (err) next(new Error('problem BD'))
+      else res.send(result)
     })
   })
 }

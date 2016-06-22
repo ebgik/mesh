@@ -8,6 +8,7 @@ var favicon = require('serve-favicon');
 var moment = require('moment');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var user = require('libs/module_user');
 
 app.engine('ejs', require('ejs-locals'));
 app.set('views', path.join(__dirname, 'templates'));
@@ -48,8 +49,18 @@ app.use(function(err, req, res, next) {
 
 io.on('connection', function(socket){
   socket.on('message', function(msg){
-    io.emit('message', msg);
+    //console.log(msg.id_sel);
+    user.getSocket(msg.id_sel,function(result){
+      io.sockets.in('/#'+result).emit('message',msg);
+      io.sockets.in(socket.id).emit('message',msg);
+    })
   });
+
+  socket.on('read', function(msg){
+      io.sockets.emit('read',msg);
+  })
+
+
 });
 
 

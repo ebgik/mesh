@@ -1,4 +1,6 @@
 $(document).ready(function(){
+	var socket = io('http://188.225.38.167:7034');
+
 	var kemoji = KEmoji.init('myEmoji', {
 	        		smileContainerWidth: 280,
 	                smileContainerHeight: 202,
@@ -11,7 +13,6 @@ $(document).ready(function(){
 		handles: 's',
      	minHeight: 250
     });
-
 
 
 	var pane = $('.wrap-mess');
@@ -39,25 +40,26 @@ $(document).ready(function(){
 			el.find('.jspDrag').css('opacity',0)
 		},500)                 
 	})
-
+	var messageInput = $('.KEmoji_Block .KEmoji_Input > div[contenteditable=true]');
 
 	$('#submitMessage').click(function(){
-		var input = $('.KEmoji_Block .KEmoji_Input > div[contenteditable=true]');
-		var message = input.html();
+		var message = messageInput.html();
 		var id_sender = $('#id_user').val();
-		if (message.replace(/<\/?[^>]+>/g,'')!='')
+		var id_sel = $('#id_sel').val();
+		if (message!='')
 		$.ajax({
 			type:'POST',
 			url:'/addmessage',
 			data:{
 				id_sender:id_sender,
+				id_sel:id_sel,
 				message:message
 			},
 			success:function(data){
 				if (data.result=='success')
 				{
-					input.html('');
-					socket.emit('message',{ id_sender : id_sender, message : message, date: data.date });
+					messageInput.html('');
+					socket.emit('message',{ id_sender : id_sender, id_sel : id_sel, message : message, date: data.date });
 				}
 			}
 		})
@@ -65,13 +67,35 @@ $(document).ready(function(){
 
 
 
-	$('.KEmoji_Block .KEmoji_Input > div[contenteditable=true]').keypress(function (e) {
+	messageInput.keypress(function (e) {
                 e = e || window.event;
                 if (e.keyCode === 13 && e.shiftKey) {
                     $('#submitMessage').click();
                 }
             })
-   
+
+	messageInput.focus(function(){
+		var id_sender = $('#id_user').val();
+		var id_sel = $('#id_sel').val();
+		var countNoread = $('.no-read').length;
+		if (countNoread>0)
+			$.ajax({
+				type:'POST',
+				url:'/readingmess',
+				data:{
+					id_sender:id_sender,
+					id_sel:id_sel,
+				},
+				success:function(data){
+					console.log(data);
+					if (data=='success')
+					{
+						socket.emit('read',{ id_sender : id_sender, id_sel : id_sel});
+					}
+				}
+			})
+		//console.log(countNoread);
+	})
 
 	$( "#resizable" ).resize(function(){
         api.reinitialise();
@@ -84,8 +108,24 @@ $(document).ready(function(){
 
 	})
 
+	socket.on('connect',function(){
+		//console.log($.cookie('session'))
+		if ($.cookie('session'))
+		$.ajax({
+			type:'POST',
+			url:'/addsocket',
+			data:{
+				sock : socket.json.id,
+				cook : $.cookie('session'),
+			}
+		})
+	})
+
+
 	socket.on('message', function(msg){
+		if ($('.none').length>0) $('.none').remove();
       		var id_sender = msg.id_sender,
+      			id_sel = msg.id_sel,
       			message = msg.message,
       			date = msg.date;
       		$.ajax({
@@ -95,7 +135,7 @@ $(document).ready(function(){
       			success:function(data){
       				if (data!='error')
       				{
-      					var html="<div class='col-md-8 col-md-offset-2 message'>";
+      					var html="<div class='col-md-8 col-md-offset-2 message no-read' data-num='"+id_sel+"'>";
       					html+="<div class='col-xs-2 wrap-text'>";
 						html+="<img src='"+data.image+"' class='avatar'/>";
 						html+="</div>";
@@ -112,5 +152,15 @@ $(document).ready(function(){
       				}
       			}
       		})
-      })
+    })
+
+	socket.on('read', function(msg){
+		//console.log(msg)
+		var id_sender = $('#id_user').val();
+		if (id_sender == msg.id_sender||id_sender == msg.id_sel)
+			$('.message[data-num='+msg.id_sender+']').removeClass('no-read');
+
+	})
+
+
 })
