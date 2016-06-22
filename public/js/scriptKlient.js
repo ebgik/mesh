@@ -75,7 +75,9 @@ $(document).ready(function(){
             })
 
 	messageInput.focus(function(){
-		document.body.scrollTop = document.body.scrollHeight;
+		$('body,html').animate({
+            scrollTop: 10000
+        }, 400);
 		var id_sender = $('#id_user').val();
 		var id_sel = $('#id_sel').val();
 		var countNoread = $('.no-read').length;
