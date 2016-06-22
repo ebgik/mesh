@@ -75,6 +75,7 @@ $(document).ready(function(){
             })
 
 	messageInput.focus(function(){
+		document.body.scrollTop = document.body.scrollHeight;
 		var id_sender = $('#id_user').val();
 		var id_sel = $('#id_sel').val();
 		var countNoread = $('.no-read').length;
@@ -87,7 +88,6 @@ $(document).ready(function(){
 					id_sel:id_sel,
 				},
 				success:function(data){
-					console.log(data);
 					if (data=='success')
 					{
 						socket.emit('read',{ id_sender : id_sender, id_sel : id_sel});
@@ -100,12 +100,10 @@ $(document).ready(function(){
 	$( "#resizable" ).resize(function(){
         api.reinitialise();
 		api.scrollTo(0,10000);
-
 	})
 	$(window).resize(function(){
         api.reinitialise();
 		api.scrollTo(0,10000);
-
 	})
 
 	socket.on('connect',function(){
@@ -123,10 +121,14 @@ $(document).ready(function(){
 
 
 	socket.on('message', function(msg){
+		var id_sender = msg.id_sender,
+			id_sel = msg.id_sel,
+			id_sel_my = $('#id_sel').val(),
+			id_send_my = $('#id_user').val();
+		if ((id_sender==id_sel_my&&id_sel==id_send_my)||(id_sender==id_send_my&&id_sel==id_sel_my))
+		{
 		if ($('.none').length>0) $('.none').remove();
-      		var id_sender = msg.id_sender,
-      			id_sel = msg.id_sel,
-      			message = msg.message,
+      		var message = msg.message,
       			date = msg.date;
       		$.ajax({
       			type:'POST',
@@ -151,7 +153,12 @@ $(document).ready(function(){
 						api.scrollTo(0,10000);
       				}
       			}
-      		})
+      		})	
+		}
+		else
+		{
+			alert('message')
+		}
     })
 
 	socket.on('read', function(msg){
