@@ -166,6 +166,7 @@ $(document).ready(function(){
 								if (dialog.length>0)
 								{
 									dialog.find('.mess-text').html('<img class="ava" src="'+data.image+'"/> '+message);
+									dialog.find('.mess-text').addClass('no-read');
 									dialog.find('.date_dialog').html(date);
 									var parent = dialog.closest('a');
 									$(parent).detach().prependTo('#dialogues');	
