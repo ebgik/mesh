@@ -52,34 +52,54 @@ module.exports = function(app) {
       {
         user.checkSession(req.cookies.session,function(resultUser){
           if (resultUser!='error'&&resultUser[0])
-               page.getPage(2,function(err,result){
-                  if (err) next(new Error('problem BD'));
-                  else
-                    if (result=='none') next();
-                    else
-                    {
-                      if (req.query.sel)
-                      user.getUserInfo(req.query.sel,function(resUser){
-                        if (resUser=='error') next();
+              if (req.query.sel)
+                user.getUserInfo(req.query.sel,function(resUser){
+                  if (resUser=='error') next();
+                  else 
+                    page.getPage(2,function(err,result){
+                      if (err) next(new Error('problem BD'));
+                      else
+                      {
+                        if (result=='none') next();
                         else
                           message.getMessages(resultUser[0].id,req.query.sel,function(errMess,resMess){
-                          if (errMess) next(new Error('problem BD'));
-                            else
-                              res.render('messages',{
-                                title : result.title,
-                                meta_k : result.keywords,
-                                meta_d : result.description,
-                                user : resultUser[0],
-                                sel : resUser,
-                                messages : resMess
-                              });                      
-                          })
-                      })
-                      else next();
-                    }
-                     
-                  })
-            else next(new Error('problem BD'));
+                            if (errMess) next(new Error('problem BD'));
+                              else
+                                res.render('messages',{
+                                  title : result.title,
+                                  meta_k : result.keywords,
+                                  meta_d : result.description,
+                                  user : resultUser[0],
+                                  sel : resUser,
+                                  messages : resMess
+                                });                      
+                          })  
+                      }               
+                    })
+                })
+              else
+              {
+                page.getPage(3,function(err,result){
+                  if (err) next(new Error('problem BD'));
+                  else
+                  {
+                    if (result=='none') next();
+                    else
+                      message.getDialogues(resultUser[0].id,function(errDial,resDial){
+                        if (errDial) next(new Error('problem BD'));
+                        else
+                          res.render('dialogues',{
+                            title : result.title,
+                            meta_k : result.keywords,
+                            meta_d : result.description,
+                            user : resultUser[0],
+                            dialogues: resDial
+                          });                      
+                      })  
+                  }               
+                })
+              }
+          else next(new Error('problem BD'));
         })
       }
       else

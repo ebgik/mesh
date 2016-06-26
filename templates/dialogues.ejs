@@ -1,0 +1,51 @@
+<% layout('/layout/page') -%>
+<% block ('title', title); %>
+<% block ('keywords', meta_k); %>
+<% block ('description', meta_d); %>
+<% block ('header','yes');%>
+<link rel="stylesheet" href="/vendor/bower_components/jquery-ui/themes/smoothness/jquery-ui.css">
+<link rel="stylesheet" href="/vendor/bower_components/kemoji/css/emoji.css">
+<link rel="stylesheet" href="/vendor/bower_components/kemoji/css/smiles.css">
+<link rel="stylesheet" href="/vendor/bower_components/scroll/css/jquery.jscrollpane.css">
+
+
+<div class='col-md-8 col-md-offset-2' id='container'>
+	<div id="resizable" class="ui-widget-content">
+		<div class='container-mess max'>
+			<%if (dialogues=='none'){%>
+			<div class='col-md-12 wrap-mess'>
+				<p class='none'>Здесь будут диалоги</p>
+			</div>
+			<%}else{%>
+				<div class='col-md-12 wrap-mess'>
+				<%dialogues.forEach(function(item, i, arr){%>
+					<a href='/messages?sel=<%-item.id%>'>
+					<div class='col-md-12 message dialog' data-num='<%-item.id_sel%>'>
+						<div class='col-md-4 col-xs-6'>
+							<div class='col-xs-4 wrap-text'>
+								<img src='<%-item.image%>' class='avatar'/> 
+							</div>
+							<div class='col-xs-8 dialog_name'>
+								<p class='name'><%-item.name%></p>
+								<p class='date_dialog'><%-item.message.date_time%></p>
+							</div>
+						</div>
+						<div class='col-md-8 col-xs-6'>
+							<p><%-item.message.message%></p>
+						</div>
+						<div class='clearfix'></div>
+					</div>
+					</a>
+				<%})%>
+				</div>
+			<%}%>
+		</div>
+		<div class='row footer-resize min'></div>
+	</div>
+
+</div>
+
+<script type="text/javascript" src='/vendor/bower_components/scroll/js/jquery.jscrollpane.min.js'></script>
+<script type="text/javascript" src='/vendor/bower_components/scroll/js/jquery.mousewheel.js'></script>
+<script type="text/javascript" src='/vendor/bower_components/kemoji/kemoji.js'></script>
+<script type="text/javascript" src='/js/scriptKlient.js'></script>

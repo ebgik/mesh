@@ -52,6 +52,10 @@ body {
 	position:absolute;
 	bottom:0;
   margin:0;
+  &.min
+  {
+    height:16px;
+  }
 }
 
 .wrap-text
@@ -62,6 +66,7 @@ body {
 .avatar
 {
   width:50px;
+  height:50px;
   max-width:100%;
   border-radius:10px;
   &.marg
@@ -84,6 +89,10 @@ body {
 {
     height: 100%;
     padding-bottom: 110px;
+    &.max
+    {
+      padding-bottom: 0;
+    }
     .none
     {
       text-align:center;
@@ -106,6 +115,15 @@ body {
   margin-bottom:2px;
   border-radius:2px;
   transition: all 0.5s;
+  &.dialog
+  {
+    border-bottom:1px solid #ccc;
+    margin:0;
+    &:hover
+    {
+      background:#f5f5f5;
+    }
+  }
   p
   {
     margin:0;
@@ -121,6 +139,11 @@ body {
       line-height:13px!important;
     }
   }
+  .dialog_name
+  {
+
+  padding: 1em 5px;
+  }
   .name
   {
     font-size: 14px;
@@ -133,6 +156,12 @@ body {
     color: #777;
     float:right;
   }
+  .date_dialog
+  {
+    font-size:10px;
+    color:#777;
+  }
+
   &.no-read
   {
     background:#f1f1f1;
