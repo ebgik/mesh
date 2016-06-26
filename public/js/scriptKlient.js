@@ -75,6 +75,12 @@ $(document).ready(function(){
                 if (e.keyCode === 13 && e.shiftKey) {
                     $('#submitMessage').click();
                 }
+                else
+                {
+                	var id_sel = $('#id_sel').val(),
+						id_sender = $('#id_user').val();
+                	socket.emit('typing',{ id_sender : id_sender, id_sel : id_sel});
+                }
             })
 
 	messageInput.focus(function(){
@@ -216,6 +222,40 @@ $(document).ready(function(){
       		})	
 		
     })
+
+var inter;
+	socket.on('typing',function(msg){
+		var id_sender = msg.id_sender,
+			id_sel = msg.id_sel,
+			id_sel_my = $('#id_sel').val(),
+			id_send_my = $('#id_user').val();
+		if ((id_sender==id_sel_my&&id_sel==id_send_my))
+		{
+			$.ajax({
+      			type:'POST',
+      			url:'/getuserinfo',
+      			data:'id='+id_sender,
+      			success:function(data){
+      				if ($('.typing').length==0)
+      				{
+					var html = "<div class='col-md-8 col-md-offset-2 typing'>";
+						html+= "<div class='img_animate'>";
+						html+= "<img src='/images/pencil.png'/>";
+						html+= "</div>"+data.name+" набирает сообщение</div>";
+						$(html).appendTo('.jspPane');
+	                    api.reinitialise();
+						api.scrollTo(0,10000);
+					}
+					clearTimeout(inter);
+					inter = setTimeout(function(){
+						$('.typing').remove();
+	                    api.reinitialise();
+						api.scrollTo(0,10000);
+					},400)
+				}
+			})
+		}
+	})
 
 	socket.on('read', function(msg){
 		//console.log(msg)

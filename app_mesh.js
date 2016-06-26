@@ -60,6 +60,9 @@ io.on('connection', function(socket){
       io.sockets.emit('read',msg);
   })
 
+  socket.on('typing', function(msg){
+      io.sockets.emit('typing',msg);
+  })
 
 });
 
