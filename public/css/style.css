@@ -48,6 +48,8 @@ body {
 .wrap-text {
   text-align: center;
   padding: 0; }
+  .wrap-text.left {
+    text-align: left; }
 
 .avatar {
   width: 50px;
@@ -114,8 +116,38 @@ body {
   .message .date_dialog {
     font-size: 10px;
     color: #777; }
-  .message.no-read {
+  .message.no-read, .message .no-read {
     background: #f1f1f1; }
+  .message .mess-text {
+    padding: 5px; }
+    .message .mess-text .ava {
+      width: 25px;
+      height: 25px; }
+
+.overlay {
+  width: 350px;
+  max-width: 100%;
+  background: #fff;
+  position: fixed;
+  top: 52px;
+  right: 0;
+  z-index: 100500; }
+  .overlay .overlay-mess {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    display: none;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s; }
+
+.ava_top {
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  float: left;
+  margin-right: 5px;
+  margin-top: -10px; }
 
 .ke {
   margin-right: 3px; }

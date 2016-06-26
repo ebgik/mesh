@@ -10,6 +10,7 @@ $(document).ready(function(){
 			url:'auth',
 			data:data,
 			success:function(data){
+				//console.log(data)
 				if (data.user!='not_user'&&data.session!='none')
 				{
 					$.cookie('session',data.session);

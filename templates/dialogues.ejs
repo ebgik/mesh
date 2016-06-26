@@ -13,14 +13,14 @@
 	<div id="resizable" class="ui-widget-content">
 		<div class='container-mess max'>
 			<%if (dialogues=='none'){%>
-			<div class='col-md-12 wrap-mess'>
+			<div class='col-md-12 wrap-mess' id='dialogues'>
 				<p class='none'>Здесь будут диалоги</p>
 			</div>
 			<%}else{%>
-				<div class='col-md-12 wrap-mess'>
+				<div class='col-md-12 wrap-mess' id='dialogues'>
 				<%dialogues.forEach(function(item, i, arr){%>
 					<a href='/messages?sel=<%-item.id%>'>
-					<div class='col-md-12 message dialog' data-num='<%-item.id_sel%>'>
+					<div class='col-md-12 message dialog' data-num='<%-item.id%>'>
 						<div class='col-md-4 col-xs-6'>
 							<div class='col-xs-4 wrap-text'>
 								<img src='<%-item.image%>' class='avatar'/> 
@@ -31,7 +31,11 @@
 							</div>
 						</div>
 						<div class='col-md-8 col-xs-6'>
-							<p><%-item.message.message%></p>
+							<p class='mess-text <%if (item.message.status==0){%>no-read<%}%>'>
+								<img class='ava' src='<%-item.message.image%>'/>
+								<%-item.message.message%>
+									
+							</p>
 						</div>
 						<div class='clearfix'></div>
 					</div>

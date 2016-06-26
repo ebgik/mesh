@@ -62,6 +62,10 @@ body {
 {
   text-align:center;
   padding:0;
+  &.left
+  {
+    text-align:left;
+  }
 }
 .avatar
 {
@@ -162,13 +166,53 @@ body {
     color:#777;
   }
 
-  &.no-read
+  &.no-read,.no-read
   {
     background:#f1f1f1;
   }
-}
 
+  .mess-text
+  {
+    padding:5px;
+    .ava
+    {
+      width:25px;
+      height:25px;
+    }
+  }
+}
+.overlay
+{
+  width:350px;
+  max-width: 100%;
+  background:#fff;
+  position: fixed;
+  top:52px;
+  right:0;
+  z-index:100500;
+  .overlay-mess
+  {
+    border:1px solid #ccc;
+    border-radius:5px;
+    display:none;
+    -webkit-transition: all 0.5s;
+     -moz-transition: all 0.5s;
+     -o-transition: all 0.5s;
+     transition: all 0.5s;
+  }
+}
+.ava_top
+{
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    float: left;
+    margin-right: 5px;
+    margin-top: -10px;
+}
 .ke
 {
   margin-right: 3px;
 }
+
+

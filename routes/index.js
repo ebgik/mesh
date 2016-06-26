@@ -33,6 +33,7 @@ module.exports = function(app) {
       user.checkUser(email,pass,function(result){
         if (result!='none'&&result!='error')
           user.sendSession(result,function(resultSession){
+            //console.log(resultSession)
             res.send({'user':result.id,'session':resultSession});
           })
         else
@@ -50,6 +51,7 @@ module.exports = function(app) {
   app.get('/messages',function(req,res,next){
       if (req.cookies.session&&req.cookies.session!='null')
       {
+        //console.log(req.cookies.session);
         user.checkSession(req.cookies.session,function(resultUser){
           if (resultUser!='error'&&resultUser[0])
               if (req.query.sel)

@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	var socket = io('http://127.0.0.1:7034');
+	var socket = io('http://188.225.38.167:7034');
 	if ($('#myEmoji').length>0)
 	{
 		var kemoji = KEmoji.init('myEmoji', {
@@ -130,8 +130,7 @@ $(document).ready(function(){
 			id_sel = msg.id_sel,
 			id_sel_my = $('#id_sel').val(),
 			id_send_my = $('#id_user').val();
-		if ((id_sender==id_sel_my&&id_sel==id_send_my)||(id_sender==id_send_my&&id_sel==id_sel_my))
-		{
+		
 		if ($('.none').length>0) $('.none').remove();
       		var message = msg.message,
       			date = msg.date;
@@ -142,35 +141,89 @@ $(document).ready(function(){
       			success:function(data){
       				if (data!='error')
       				{
-      					var html="<div class='col-md-8 col-md-offset-2 message no-read' data-num='"+id_sel+"'>";
-      					html+="<div class='col-xs-2 wrap-text'>";
-						html+="<img src='"+data.image+"' class='avatar'/>";
-						html+="</div>";
-						html+="<div class='col-xs-10'>";
-						html+="<span class='name'>"+data.name+"</span>";
-						html+="<span class='date'>"+date+"</span>";
-						html+="<p>"+message+"</p>";
-						html+="</div>";
-						html+="<div class='clearfix'></div>";
-						html+="</div>";
-      					$(html).appendTo('.jspPane');
-                    	api.reinitialise();
-						api.scrollTo(0,10000);
+      					if ((id_sender==id_sel_my&&id_sel==id_send_my)||(id_sender==id_send_my&&id_sel==id_sel_my))
+						{
+	      					var html="<div class='col-md-8 col-md-offset-2 message no-read' data-num='"+id_sel+"'>";
+	      					html+="<div class='col-xs-2 wrap-text'>";
+							html+="<img src='"+data.image+"' class='avatar'/>";
+							html+="</div>";
+							html+="<div class='col-xs-10'>";
+							html+="<span class='name'>"+data.name+"</span>";
+							html+="<span class='date'>"+date+"</span>";
+							html+="<p>"+message+"</p>";
+							html+="</div>";
+							html+="<div class='clearfix'></div>";
+							html+="</div>";
+	      					$(html).appendTo('.jspPane');
+	                    	api.reinitialise();
+							api.scrollTo(0,10000);
+      					}
+						else
+						{
+							if ($('#dialogues').length>0)
+							{
+								var dialog = $('#dialogues').find('.dialog[data-num='+id_sender+']');
+								if (dialog.length>0)
+								{
+									dialog.find('.mess-text').html('<img class="ava" src="'+data.image+'"/> '+message);
+									dialog.find('.date_dialog').html(date);
+									var parent = dialog.closest('a');
+									$(parent).detach().prependTo('#dialogues');	
+								}
+								else
+								{
+									var html = "<a href='/messages?sel="+id_sender+"'>";
+										html += "<div class='col-md-12 message dialog' data-num='"+id_sender+"'>";
+										html += "<div class='col-md-4 col-xs-6'>";
+										html += "<div class='col-xs-4 wrap-text'>";
+										html += "<img src='"+data.image+"' class='avatar'/>"; 
+										html += "</div>";
+										html += "<div class='col-xs-8 dialog_name'>";
+										html += "<p class='name'>"+data.name+"</p>";
+										html += "<p class='date_dialog'>"+date+"</p>";
+										html += "</div></div>";
+										html += "<div class='col-md-8 col-xs-6'>";
+										html += "<p class='mess-text no-read'>";
+										html += "<img class='ava' src='"+data.image+"'/> "+message+"</p>";
+										html += "</div><div class='clearfix'></div></div></a>";
+									$(html).prependTo('#dialogues');		
+								}	
+							}
+							else
+							{
+								var html = "<div class='overlay-mess message'>";
+									html+= "<div class='col-md-12'>";
+									html+= "<div class='col-xs-3 wrap-text left'>";
+									html+= "<img src='"+data.image+"' class='avatar'/>"; 
+									html+= "</div>";
+									html+= "<div class='col-xs-9 dialog_name'>";
+									html+= "<p class='name'>"+data.name+"</p>";
+									html+= "<p class='date_dialog'>"+date+"</p>";
+									html+= "</div></div>";
+									html+= "<div class='col-md-12'>";
+									html+= "<p class='mess-text'>"+message+"</p>";
+									html+= "</div>";
+									html+= "<div class='clearfix'></div>";
+									html+= "</div>";
+								$(html).prependTo('.overlay');
+								$('.overlay-mess:first-child').fadeIn();
+								setTimeout(function(){$('.overlay-mess:first-child').remove();},3000)
+							}
+						}
       				}
       			}
       		})	
-		}
-		else
-		{
-			alert('message')
-		}
+		
     })
 
 	socket.on('read', function(msg){
 		//console.log(msg)
 		var id_sender = $('#id_user').val();
 		if (id_sender == msg.id_sender||id_sender == msg.id_sel)
+		{
 			$('.message[data-num='+msg.id_sender+']').removeClass('no-read');
+		}
+			$('.dialog[data-num='+msg.id_sender+']').find('.mess-text').removeClass('no-read');
 
 	})
 
