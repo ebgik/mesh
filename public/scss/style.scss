@@ -288,6 +288,10 @@ body {
     background:#fff;
     border-bottom:1px solid #ccc;
     z-index: 100500;
+    a:hover
+    {
+      text-decoration:none;
+    }
     .single_search
     {
       padding:10px;

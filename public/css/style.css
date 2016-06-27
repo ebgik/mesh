@@ -207,6 +207,8 @@ body {
     background: #fff;
     border-bottom: 1px solid #ccc;
     z-index: 100500; }
+    .search .result_search a:hover {
+      text-decoration: none; }
     .search .result_search .single_search {
       padding: 10px;
       border-top: 1px solid #f5f5f5; }
