@@ -137,6 +137,12 @@ module.exports = function(app) {
     })
   })
 
+  app.post('/search_mess',function(req,res,next){
+    var str = req.body.str;
+    user.searchUsers(str,function(result){
+      res.send(result)
+    })
+  })
 
   app.post('/addsocket',function(req,res,next){
     var cook = req.body.cook,

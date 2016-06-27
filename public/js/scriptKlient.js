@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	var socket = io('http://188.225.38.167:7034');
+	var socket = io('http://188.225.38.267:7034');
 	if ($('#myEmoji').length>0)
 	{
 		var kemoji = KEmoji.init('myEmoji', {
@@ -108,6 +108,8 @@ $(document).ready(function(){
 		//console.log(countNoread);
 	})
 
+
+
 	$( "#resizable" ).resize(function(){
         api.reinitialise();
 		api.scrollTo(0,10000);
@@ -116,6 +118,33 @@ $(document).ready(function(){
         api.reinitialise();
 		api.scrollTo(0,10000);
 	})
+
+	$('#search_mess').keyup(function(){
+		var str = $(this).val();
+		if (str=='')
+			$('.result_search').html('');
+		else
+		$.ajax({
+			type:'POST',
+			url:'/search_mess',
+			data:'str='+str,
+			success:function(data){
+				if (data=='none'||data=='error')
+				{
+					var html = "<div class='none'>Нет результатов</div>";
+				}
+				else
+				{
+					var html = '';
+					data.forEach(function(item, i, arr){
+						html += "<a href='messages?sel="+item.id+"'><div class='single_search'><img class='ava' src='"+item.image+"'/> "+item.name+"</div></a>";
+					})
+				}
+				$('.result_search').html(html);
+			}
+		})
+	})	
+
 
 	socket.on('connect',function(){
 		//console.log($.cookie('session'))

@@ -174,12 +174,12 @@ body {
   .mess-text
   {
     padding:5px;
-    .ava
-    {
-      width:25px;
-      height:25px;
-    }
   }
+}
+.ava
+{
+  width:25px;
+  height:25px;
 }
 .overlay
 {
@@ -259,5 +259,52 @@ body {
   }
   
 }
-
+.search
+{
+  padding:10px;
+  background:#f5f5f5;
+  border-bottom:1px solid #ccc;
+  position:relative;
+  input
+  {
+    width:100%;
+    padding:5px 5px 5px 35px;
+    background-image: url(/images/search.png);
+    background-repeat:no-repeat;
+    background-size:15px;
+    background-position:10px center;
+    border:1px solid #ccc;
+    &:focus
+    {
+      outline:1px solid #777;
+    }
+  }
+  .result_search
+  {
+    width:100%;
+    position:absolute;
+    top:100%;
+    left:0;
+    background:#fff;
+    border-bottom:1px solid #ccc;
+    z-index: 100500;
+    .single_search
+    {
+      padding:10px;
+      border-top:1px solid #f5f5f5;
+      &:hover
+      {
+        cursor:pointer;
+        background:#f5f5f5;
+      }
+    }
+    .none
+    {
+      padding:10px;
+      border-top:1px solid #f5f5f5;
+      text-align:center;
+      font-size:14px;
+    }
+  }
+}
 
