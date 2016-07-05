@@ -34,6 +34,48 @@ body {
   height: 40px;
   margin: 5px; }
 
+.left_block {
+  display: inline-block;
+  width: 40%;
+  float: left; }
+  .left_block a {
+    font-size: 14px;
+    color: #ccc; }
+    .left_block a:hover {
+      cursor: pointer;
+      text-decoration: none;
+      color: #fff; }
+
+.right_block {
+  display: inline-block;
+  float: right;
+  margin: 0; }
+  .right_block li {
+    display: inline-block;
+    line-height: 50px;
+    margin: 0 10px; }
+    .right_block li a {
+      font-size: 14px;
+      color: #ccc; }
+      .right_block li a:hover {
+        cursor: pointer;
+        text-decoration: none;
+        color: #fff; }
+    .right_block li.menu {
+      position: relative; }
+      .right_block li.menu a {
+        font-size: 10px; }
+  .right_block .submenu {
+    position: absolute;
+    right: 0;
+    background: #000;
+    padding: 0; }
+    .right_block .submenu li {
+      display: block;
+      line-height: 30px; }
+      .right_block .submenu li a {
+        font-size: 14px; }
+
 .footer-resize {
   width: 100%;
   height: 110px;
@@ -147,8 +189,7 @@ body {
   height: 40px;
   border-radius: 100%;
   float: left;
-  margin-right: 5px;
-  margin-top: -10px; }
+  margin: 5px; }
 
 .ke {
   margin-right: 3px; }
