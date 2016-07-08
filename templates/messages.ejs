@@ -39,7 +39,7 @@
 		
 		<div class='row footer-resize '>
 			<div class='col-md-2 col-xs-2 wrap-text'>
-				<img src='<%-user.image%>' class='avatar marg'/> 
+				<a href='./profile?id=<%-user.id%>'><img src='<%-user.image%>' class='avatar marg'/></a> 
 			</div>
 			<div class='col-md-8 col-xs-8 wrap-text'>
 				<div class='text' id="myEmoji"></div>
@@ -50,7 +50,7 @@
 				</div>
 			</div>
 			<div class='col-md-2 col-xs-2 wrap-text'>
-				<img src='<%-sel.image%>' class='avatar marg'/> 
+				<a href='./profile?id=<%-sel.id%>'><img src='<%-sel.image%>' class='avatar marg'/></a>
 			</div>
 
 		</div>
@@ -61,4 +61,5 @@
 <script type="text/javascript" src='/vendor/bower_components/scroll/js/jquery.jscrollpane.min.js'></script>
 <script type="text/javascript" src='/vendor/bower_components/scroll/js/jquery.mousewheel.js'></script>
 <script type="text/javascript" src='/vendor/bower_components/kemoji/kemoji.js'></script>
+<script type="text/javascript" src='/js/scriptMess.js'></script>
 <script type="text/javascript" src='/js/scriptKlient.js'></script>

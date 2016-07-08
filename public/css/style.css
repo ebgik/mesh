@@ -270,4 +270,9 @@ body {
       text-align: center;
       font-size: 14px; }
 
+.profile {
+  padding: 20px 0; }
+  .profile .avatarBig {
+    width: 100%; }
+
 /*# sourceMappingURL=style.css.map */

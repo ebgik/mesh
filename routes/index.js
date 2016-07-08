@@ -120,6 +120,55 @@ module.exports = function(app) {
       }
   }) 
 
+  app.get('/profile',function(req,res,next){
+    if (req.cookies.session&&req.cookies.session!='null')
+      {
+        //console.log(req.cookies.session);
+        user.checkSession(req.cookies.session,function(resultUser){
+          if (resultUser!='error')
+            if (resultUser=='none') 
+            {
+              res.clearCookie('session');
+              res.writeHead(302, { 'Location': '/'})
+              res.end();
+            }
+            else
+            {
+              if (req.query.id)
+                user.getUserInfo(req.query.id,function(resUser){
+                  if (resUser=='error') next();
+                  else 
+                    res.render('profile',{
+                      title : resUser.name,
+                      meta_k : resUser.name,
+                      meta_d : resUser.name,
+                      user : resultUser[0],
+                      userInfo : resUser,
+                      my : 'no'
+                    });                      
+                })
+              else
+              {
+                res.render('profile',{
+                  title : resultUser[0].name,
+                  meta_k : resultUser[0].name,
+                  meta_d : resultUser[0].name,
+                  user : resultUser[0],
+                  userInfo : resultUser[0],
+                  my : 'yes'
+                });                      
+              }
+            }
+          else next(new Error('problem BD'));
+        })
+      }
+      else
+      {
+        res.writeHead(302, { 'Location': '/'})
+        res.end();
+      }
+  })
+
   app.post('/addmessage',function(req,res,next){
       var id_sender = req.body.id_sender,
           id_sel = req.body.id_sel,
