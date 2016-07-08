@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	var socket = io('http://188.225.38.267:7034');
+	var socket = io('http://188.225.38.167:7034');
 	if ($('#myEmoji').length>0)
 	{
 		var kemoji = KEmoji.init('myEmoji', {
