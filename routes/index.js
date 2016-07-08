@@ -9,7 +9,7 @@ module.exports = function(app) {
   app.get('/',function(req,res,next){
     if (req.cookies.session&&req.cookies.session!='null')
         {
-          res.writeHead(302, { 'Location': '/messages'});
+          res.writeHead(302, { 'Location': '/profile'});
           res.end();
         }
     else

@@ -1,6 +1,6 @@
 $(document).ready(function(){
 	var socket = io('http://127.0.0.1:7034');
-	
+
 	var messageInput = $('.KEmoji_Block .KEmoji_Input > div[contenteditable=true]');
 
 	$('#submitMessage').click(function(){
@@ -109,7 +109,7 @@ $(document).ready(function(){
 			url:'deletesession',
 			success:function(data){
 				if (data=='success')
-					window.location = "/";
+					location.reload();
 			}
 		})
 	})

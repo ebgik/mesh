@@ -14,7 +14,7 @@ $(document).ready(function(){
 				if (data.user!='not_user'&&data.session!='none')
 				{
 					$.cookie('session',data.session);
-					document.location.href = '/messages';
+					document.location.href = '/profile';
 				}
 				else
 				{
