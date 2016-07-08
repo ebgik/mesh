@@ -53,7 +53,7 @@ body {
   .right_block li {
     display: inline-block;
     line-height: 50px;
-    margin: 0 10px; }
+    padding: 0 10px; }
     .right_block li a {
       font-size: 14px;
       color: #ccc; }
@@ -68,8 +68,16 @@ body {
   .right_block .submenu {
     position: absolute;
     right: 0;
-    background: #000;
-    padding: 0; }
+    height: 0;
+    overflow: hidden;
+    background: #222;
+    padding: 0;
+    width: 150px;
+    transition: all 0.5s;
+    border-radius: 0 0 5px 5px; }
+    .right_block .submenu.show {
+      height: 100px;
+      box-shadow: 0px 0px 15px 2px #222; }
     .right_block .submenu li {
       display: block;
       line-height: 30px; }

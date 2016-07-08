@@ -51,7 +51,10 @@ io.on('connection', function(socket){
   socket.on('message', function(msg){
     //console.log(msg.id_sel);
     user.getSocket(msg.id_sel,function(result){
-      io.sockets.in('/#'+result).emit('message',msg);
+      result.forEach(function(item,i,arr){
+          io.sockets.in('/#'+item.socket_id).emit('message',msg);
+      })
+      
       io.sockets.in(socket.id).emit('message',msg);
     })
   });

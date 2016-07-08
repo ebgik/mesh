@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	var socket = io('http://127.0.0.1:7034');
+	var socket = io('http://188.225.38.267:7034');
 	if ($('#myEmoji').length>0)
 	{
 		var kemoji = KEmoji.init('myEmoji', {
@@ -144,7 +144,24 @@ $(document).ready(function(){
 			}
 		})
 	})	
+	$('.menu>a').click(function(){
+		if ($('.submenu').hasClass('show'))
+			$('.submenu').removeClass('show');
+		else
+			$('.submenu').addClass('show');
+	})
 
+	$('#exit').click(function(){
+		
+		$.ajax({
+			type:'POST',
+			url:'deletesession',
+			success:function(data){
+				if (data=='success')
+					window.location = "/";
+			}
+		})
+	})
 
 	socket.on('connect',function(){
 		//console.log($.cookie('session'))

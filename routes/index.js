@@ -53,7 +53,15 @@ module.exports = function(app) {
       {
         //console.log(req.cookies.session);
         user.checkSession(req.cookies.session,function(resultUser){
-          if (resultUser!='error'&&resultUser[0])
+          if (resultUser!='error')
+            if (resultUser=='none') 
+            {
+              res.clearCookie('session');
+              res.writeHead(302, { 'Location': '/'})
+              res.end();
+            }
+            else
+            {
               if (req.query.sel)
                 user.getUserInfo(req.query.sel,function(resUser){
                   if (resUser=='error') next();
@@ -101,6 +109,7 @@ module.exports = function(app) {
                   }               
                 })
               }
+            }
           else next(new Error('problem BD'));
         })
       }
