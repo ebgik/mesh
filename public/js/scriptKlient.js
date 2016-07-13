@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	var socket = io('http://188.225.38.167:7034');
+	var socket = io('http://127.0.0.1:7034');
 
 	if ($('#myEmoji').length>0)
 	{
@@ -142,7 +142,7 @@ $(document).ready(function(){
 				{
 					var html = '';
 					data.forEach(function(item, i, arr){
-						html += "<a href='messages?sel="+item.id+"'><div class='single_search'><img class='ava' src='"+item.image+"'/> "+item.name+"</div></a>";
+						html += "<a href='messcont?sel="+item.id+"'><div class='single_search'><img class='ava' src='"+item.image+"'/> "+item.name+" "+item.family+"</div></a>";
 					})
 				}
 				$('.result_search').html(html);
@@ -154,6 +154,31 @@ $(document).ready(function(){
 			$('.submenu').removeClass('show');
 		else
 			$('.submenu').addClass('show');
+	})
+
+	$('body').on('click','.block_dialog i',function(){
+		var block = $(this).closest('.block_dialog'),
+			num = block.attr('data-num'),
+			active = $('.block_dialog.active').attr('data-num'),
+			first = block.prev().attr('data-num'),
+			next = block.next().attr('data-num'),
+			peers = $.cookie('peers'),
+        	strPeers = peers.split(',');
+        strPeers.splice(strPeers.indexOf(num), 1);
+        $.cookie('peers',strPeers);
+		if (first) document.location.href = '/messcont?sel='+active;
+		else
+		{
+			if (next) document.location.href = '/messcont?sel='+next;
+			else 
+				{
+					document.location.href = '/messages';
+					$.cookie('peers','');
+				}
+		} 
+			
+
+		return false;
 	})
 
 	$('#exit').click(function(){

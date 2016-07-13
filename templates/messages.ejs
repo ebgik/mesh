@@ -8,7 +8,29 @@
 <link rel="stylesheet" href="/vendor/bower_components/kemoji/css/smiles.css">
 <link rel="stylesheet" href="/vendor/bower_components/scroll/css/jquery.jscrollpane.css">
 
-
+<div class='col-md-8 col-md-offset-2'>
+	<div class='col-md-12 tabs'>
+		<a href='/messages'>Диалоги</span>
+		<a class='active'>Просмотр диалогов</span>
+	</div>
+</div>
+<div class='col-md-8 col-md-offset-2'>
+	<div class='col-md-12 search'>
+	<%if (peers!='none') {%> 
+	<%peers.forEach(function(item, i, arr){%>
+		<a href='/messcont?sel=<%-item.id%>' class='block_dialog <%if(item.id==sel.id){%>active<%}%>' data-num='<%-item.id%>'>
+			<%-item.name%>
+			<i class="fa fa-times" aria-hidden="true"></i>
+		</a>	
+	<%})%>
+	<%}else{%>
+		<a href='/messcont?sel=<%-sel.id%>' class='block_dialog active' data-num='<%-sel.id%>'>
+			<%-sel.name%> 
+			<i class="fa fa-times" aria-hidden="true"></i>
+		</a>
+	<%}%>
+	</div>
+</div>
 <div class='col-md-8 col-md-offset-2' id='container'>
 	<div id="resizable" class="ui-widget-content">
 		<div class='container-mess'>

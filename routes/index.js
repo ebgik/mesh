@@ -75,20 +75,32 @@ module.exports = function(app) {
                           message.getMessages(resultUser[0].id,req.query.sel,function(errMess,resMess){
                             if (errMess) next(new Error('problem BD'));
                               else
-                                res.render('messages',{
-                                  title : result.title,
-                                  meta_k : result.keywords,
-                                  meta_d : result.description,
-                                  user : resultUser[0],
-                                  sel : resUser,
-                                  messages : resMess
-                                });                      
+                              {
+                                var pee = '';
+                                if (req.query.peers) pee = req.query.sel+'_'+req.query.peers;
+                                else pee = req.query.sel;
+
+                                user.getPeers(pee,function(resPeers){
+                                  //console.log(resPeers)
+                                  res.render('messages',{
+                                    title : result.title,
+                                    meta_k : result.keywords,
+                                    meta_d : result.description,
+                                    user : resultUser[0],
+                                    sel : resUser,
+                                    messages : resMess,
+                                    peers : resPeers
+                                  }); 
+                                })     
+                              }               
                           })  
                       }               
                     })
                 })
               else
               {
+                var showDia = false;
+                if (req.cookies.peers) showDia = true;
                 page.getPage(3,function(err,result){
                   if (err) next(new Error('problem BD'));
                   else
@@ -103,7 +115,8 @@ module.exports = function(app) {
                             meta_k : result.keywords,
                             meta_d : result.description,
                             user : resultUser[0],
-                            dialogues: resDial
+                            dialogues: resDial,
+                            showBut : showDia
                           });                      
                       })  
                   }               
@@ -119,6 +132,80 @@ module.exports = function(app) {
         res.end();
       }
   }) 
+
+app.get('/messcont',function(req,res,next){
+    var sel = 0;
+    var peers = '';
+    //console.log(req.cookies.peers);
+    if (req.query.sel)
+    {
+      sel = req.query.sel;
+      var adress = '/messages?sel='+sel;
+      if (req.cookies.peers)
+      {
+        peers = req.cookies.peers;
+        var strPeers = peers.split(',');
+        console.log(strPeers)
+        if (strPeers.indexOf(req.query.sel)==-1)
+        {
+          peers+=','+req.query.sel;
+          strPeers.push(req.query.sel);
+        }
+
+        if (strPeers.length>1)
+        {
+          adress += '&peers=';
+          var str = '';
+          for(var i = 0; i<strPeers.length; i++)
+          {
+            
+            if (strPeers[i]!=sel)
+            {
+              if (str!='') str+='_';
+                str+=strPeers[i];
+            }
+
+          }
+          adress +=str;
+        }
+      }
+      else 
+        peers=req.query.sel;
+
+      res.cookie('peers',peers);
+
+      res.writeHead(302, { 'Location': adress});
+      res.end();
+    }
+    else
+    {
+      if (req.cookies.peers)
+      {
+        peers = req.cookies.peers;
+        var strPeers = peers.split(',');
+
+        var adress = '/messages?sel='+strPeers[0];
+        if (strPeers.length>1)
+        {
+          //console.log(strPeers);
+          adress += '&peers=';
+          for(var i = 1; i<strPeers.length; i++)
+          {
+            if (i!=1) adress+='_';
+            adress+=strPeers[i];
+            //console.log(adress);
+          }
+        }
+        res.writeHead(302, { 'Location': adress});
+        res.end();
+      }
+      else
+      {
+        res.writeHead(302, { 'Location': '/messages'});
+        res.end();
+      }
+    }
+})
 
   app.get('/profile',function(req,res,next){
     if (req.cookies.session&&req.cookies.session!='null')

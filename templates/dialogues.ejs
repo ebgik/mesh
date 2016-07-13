@@ -8,28 +8,36 @@
 <link rel="stylesheet" href="/vendor/bower_components/kemoji/css/smiles.css">
 <link rel="stylesheet" href="/vendor/bower_components/scroll/css/jquery.jscrollpane.css">
 
-
+<div class='col-md-8 col-md-offset-2'>
+	<div class='col-md-12 tabs'>
+		<a class='active'>Диалоги</a>
+		<%if (showBut){%><a href='/messcont'>Просмотр диалогов</a><%}%>
+	</div>
+</div>
+<div class='col-md-8 col-md-offset-2'>
+	<div class='col-md-12 search'>
+		<input type='text' name='name' id='search_mess' placeholder='Поиск собеседников'/>
+		<div class='result_search'></div>	
+	</div>
+</div>
 <div class='col-md-8 col-md-offset-2' id='container'>
 	<div id="resizable" class="ui-widget-content">
 		<div class='container-mess max'>
 			<div class='col-md-12 wrap-mess' id='dialogues'>
 			
-			<div class='col-md-12 search'>
-				<input type='text' name='name' id='search_mess' placeholder='Поиск собеседников'/>
-				<div class='result_search'></div>	
-			</div>
+			
 			<%if (dialogues=='none'){%>
 				<p class='none'>Здесь будут диалоги</p>
 			<%}else{%>
 				<%dialogues.forEach(function(item, i, arr){%>
-					<a href='/messages?sel=<%-item.id%>'>
+					<a href='/messcont?sel=<%-item.id%>'>
 					<div class='col-md-12 message dialog' data-num='<%-item.id%>'>
 						<div class='col-md-4 col-xs-6'>
 							<div class='col-xs-4 wrap-text'>
 								<img src='<%-item.image%>' class='avatar'/> 
 							</div>
 							<div class='col-xs-8 dialog_name'>
-								<p class='name'><%-item.name%></p>
+								<p class='name'><%-item.name%> <%-item.family%></p>
 								<p class='date_dialog'><%-item.message.date_time%></p>
 							</div>
 						</div>

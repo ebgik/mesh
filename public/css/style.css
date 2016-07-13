@@ -10,12 +10,12 @@ body {
   padding: 0 !important; }
 
 #container {
-  height: calc(100vh - 100px);
+  height: calc(100vh - 190px);
   position: relative; }
 
 #resizable {
   width: 100%;
-  height: calc(100vh - 100px);
+  height: calc(100vh - 190px);
   border: 1px solid #ccc; }
 
 #footer {
@@ -156,9 +156,12 @@ body {
   .message .dialog_name {
     padding: 1em 5px; }
   .message .name {
-    font-size: 14px;
-    color: #444;
-    font-weight: bold; }
+    font-size: 12px;
+    color: #222;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; }
   .message .date {
     font-size: 11px;
     color: #777;
@@ -236,7 +239,8 @@ body {
 .search {
   padding: 10px;
   background: #f5f5f5;
-  border-bottom: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
   position: relative; }
   .search input {
     width: 100%;
@@ -269,6 +273,47 @@ body {
       border-top: 1px solid #f5f5f5;
       text-align: center;
       font-size: 14px; }
+  .search .block_dialog {
+    display: inline-block;
+    background: #f5f5f5;
+    color: #444;
+    padding: 5px;
+    border-radius: 5px;
+    font-weight: 200;
+    transition: all 0.5s; }
+    .search .block_dialog i {
+      opacity: 0.2;
+      transition: all 0.5s; }
+      .search .block_dialog i:hover {
+        opacity: 1; }
+    .search .block_dialog:hover {
+      text-decoration: none;
+      background: #c7c7c7; }
+    .search .block_dialog.active {
+      background: #444;
+      color: #fff; }
+
+.tabs {
+  border: 1px solid #ccc;
+  border-bottom: 1px solid #444; }
+  .tabs a {
+    display: inline-block;
+    padding: 5px 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-bottom: 0;
+    color: #444;
+    border-radius: 5px 5px 0 0;
+    margin-right: 10px;
+    font-weight: 200;
+    transition: all 0.5s; }
+    .tabs a:hover {
+      background: #f5f5f5;
+      text-decoration: none; }
+    .tabs a.active {
+      background: #444;
+      color: #f5f5f5;
+      font-weight: 200; }
 
 .profile {
   padding: 20px 0; }
