@@ -460,13 +460,15 @@ body {
     #edit_photo
     {
       position:absolute;
-      bottom:-50px;
+      bottom:0;
       border-radius:0;
       background:rgba(0,0,0,0.5);
       color:#fff;
       font-weight: 200;
       transition:all 0.5s;
       opacity:0.8;
+      width:100%;
+      margin:0;
       &:hover
       {
         opacity:1;
@@ -474,18 +476,6 @@ body {
       &:focus
       {
         outline:0;
-      }
-      &.show
-      {
-        bottom:0;
-        opacity:1;
-      }
-    }
-    &:hover
-    {
-      #edit_photo
-      {
-        bottom:0;
       }
     }
   }  
