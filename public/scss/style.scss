@@ -22,6 +22,7 @@ body {
 	width:100%;
 	height:calc(100vh - 190px);
 	border:1px solid #ccc;
+  padding-bottom:20px;
 }
 #footer {
   position: absolute;
@@ -448,9 +449,114 @@ body {
 .profile
 {
   padding:20px 0;
-  .avatarBig
+  .avatar_wrap
   {
-    width:100%;
-  }
-  
+    position:relative;
+    overflow:hidden;
+    .avatarBig
+    {
+      width:100%;
+    }
+    #edit_photo
+    {
+      position:absolute;
+      bottom:-50px;
+      border-radius:0;
+      background:rgba(0,0,0,0.5);
+      color:#fff;
+      font-weight: 200;
+      transition:all 0.5s;
+      opacity:0.8;
+      &:hover
+      {
+        opacity:1;
+      }
+      &:focus
+      {
+        outline:0;
+      }
+    }
+    &:hover
+    {
+      #edit_photo
+      {
+        bottom:0;
+      }
+    }
+  }  
 }
+
+.overlay-back
+{
+  position:fixed;
+  top:0;bottom:0;left:0;right:0;
+  background:rgba(0,0,0,0.5);
+  width:100%;
+  z-index:100500;
+  overflow:auto;
+  display:none;
+  .window
+  {
+    background:#fff;
+    min-height:100px;
+    margin-top:20vh;
+    margin-bottom:20vh;
+    padding:20px;
+    .close
+    {
+      float:right;
+    }
+    #errors
+    {
+      padding: 10px;
+      text-align: center;
+    }
+  }
+  .boton
+  {
+    margin:10px;
+  }
+  p
+  {
+    line-height:1;
+    margin-top:10px;
+    margin-bottom:0;
+  }
+  .jcrop-holder {
+      margin: 0 auto;
+  }
+  #image
+  {
+    text-align:center;
+    #image_crop
+    {
+      max-width:100%;
+      max-height:500px;
+    }
+    #spinner
+    {
+      width:30px;
+    }
+    .loader
+    {
+      position:absolute;
+      top:0;bottom:0;left:0;right:0;
+      background:rgba(255,255,255,0.5);
+      line-height: 600px;
+      z-index: 100500;
+    }
+  }
+}
+
+#avatar
+{
+  display:none;
+}
+
+
+
+
+
+
+
+

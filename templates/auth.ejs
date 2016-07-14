@@ -6,11 +6,14 @@
 	<form class="form-signin" role="form" id='adminForm' method='POST'>
         <h1><%=blocks.title%></h1>
         <div class='form-group'>
-        	<input type="email" name='email' class="form-control" placeholder="Email address" required autofocus>
+        	<input type="email" name='email' class="form-control" placeholder="E-mail" required autofocus>
         </div>
         <div class='form-group'>
-        	<input type="password" name='pass' class="form-control" placeholder="Password" required>
+        	<input type="password" name='pass' class="form-control" placeholder="Пароль" required>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <div class='form-group'>
+            <a href='/registration'>Регистрация</a>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Войти</button>
     </form>
 </div>

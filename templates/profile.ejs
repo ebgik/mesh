@@ -3,15 +3,45 @@
 <% block ('keywords', meta_k); %>
 <% block ('description', meta_d); %>
 <% block ('header','yes');%>
-
+<%if(my=='yes'){%>
+<link rel="stylesheet" href="/css/jquery.Jcrop.css" type="text/css" />
+	<div class='overlay-back'>
+		<div class='window col-md-6 col-md-offset-3'>
+			<a href="#" class='close'>Закрыть</a>
+			<h2>Загрузка новой фотографии</h2>
+			<p>Друзьям будет проще узнать Вас, если Вы загрузите свою настоящую фотографию.</p>
+			<p>Вы можете загрузить изображение в формате JPG, JPEG или PNG.</p>
+	        <div class='form-group has-error' id='errors'></div>
+	        <div class='form-group' id='image'></div>
+			<form action="" method="post" id="uploadAva" enctype="multipart/form-data">
+				<button type="button" class="btn btn-primary col-md-4 col-md-offset-4" id='editPhoto'>Выбрать файл</button>
+				<input type='file' id='avatar' name='ava'/>
+			</form>
+			<form action="" method="post" id="crop">
+				<input type='hidden' id='id_user' name='id_user' value='<%-userInfo.id%>'/>
+				<input type="hidden" id="x" name="x" value='0'/>
+	            <input type="hidden" id="y" name="y" value='0' />
+	            <input type="hidden" id="w" name="w" value='0' />
+	            <input type="hidden" id="h" name="h" value='0' />
+			</form>
+		</div>
+	</div>
+<%}%>
 
 <div class='col-md-8 col-md-offset-2 profile'>
 	<div class='col-md-5 col-sm-5 col-xs-7'>
-		<img src='<%-userInfo.image%>' class='avatarBig'/>
+		<div class='avatar_wrap'>
+			<img src='<%-userInfo.image%>' class='avatarBig'/>
+			<%if(my=='yes'){%>
+				<button type="button" class="btn col-md-12" id='edit_photo'>
+				<i class="fa fa-camera-retro" aria-hidden="true"></i> Изменить фото</button>
+			<%}%>
+		</div>
 	</div>
 	<div class='col-md-7 col-sm-7 col-xs-12'>
 		<h2><%-userInfo.name%> <%-userInfo.family%> <%if(my=='yes'){%>(Это Вы)<%}%></h2>
 	</div>
 </div>
 
+<script type="text/javascript" src="/js/jquery.Jcrop.min.js"></script>
 <script type="text/javascript" src='/js/scriptKlient.js'></script>

@@ -2,6 +2,9 @@
 var page = require('libs/module_page');
 var user = require('libs/module_user');
 var message = require('libs/module_message');
+var fs = require("fs");
+var formidable = require('formidable');
+var im = require('libs/module_image');
 
 module.exports = function(app) {
 
@@ -27,26 +30,21 @@ module.exports = function(app) {
           
   })  
 
-  app.post('/auth',function(req,res,nest){
-    var email = req.body.email,
-        pass = req.body.pass;
-      user.checkUser(email,pass,function(result){
-        if (result!='none'&&result!='error')
-          user.sendSession(result,function(resultSession){
-            //console.log(resultSession)
-            res.send({'user':result.id,'session':resultSession});
-          })
-        else
-            res.send({'user':'not_user','session':'none'});
-      })
+
+  app.get('/registration',function(req,res,next){
+      page.getPage(4,function(err,result){
+          if (err) next(new Error('problem BD'));
+          else
+            if (result=='none') next();
+            else
+            res.render('registration',{
+              title : result.title,
+              meta_k : result.keywords,
+              meta_d : result.description
+            });
+        })      
   })
 
-  app.post('/deletesession',function(req,res,next){
-      var session = req.body.session;
-      user.deleteSession(session,function(result){
-        res.send(result)
-      })
-  })
 
   app.get('/messages',function(req,res,next){
       if (req.cookies.session&&req.cookies.session!='null')
@@ -256,6 +254,41 @@ app.get('/messcont',function(req,res,next){
       }
   })
 
+  app.post('/auth',function(req,res,nest){
+    var email = req.body.email,
+        pass = req.body.pass;
+      user.checkUser(email,pass,function(result){
+        if (result!='none'&&result!='error')
+          user.sendSession(result,function(resultSession){
+            //console.log(resultSession)
+            res.send({'user':result.id,'session':resultSession});
+          })
+        else
+            res.send({'user':'not_user','session':'none'});
+      })
+  })
+
+  app.post('/deletesession',function(req,res,next){
+      var session = req.body.session;
+      user.deleteSession(session,function(result){
+        res.send(result)
+      })
+  })
+
+  app.post('/registration',function(req,res,next){
+      var name = req.body.name,
+          email = req.body.email,
+          pass = req.body.pass,
+          double_pass = req.body.double_pass;
+      if (pass!=double_pass)
+        res.send('err_pass');
+      else
+        user.addUser(name,email,pass,function(result){
+          res.send(result);
+        })
+
+  })
+
   app.post('/addmessage',function(req,res,next){
       var id_sender = req.body.id_sender,
           id_sel = req.body.id_sel,
@@ -297,4 +330,104 @@ app.get('/messcont',function(req,res,next){
       else res.send(result)
     })
   })
+
+  app.post('/uploadimage',function(req,res,next){
+      var form = new formidable.IncomingForm();
+      //здесь будет храниться путь с загружаемому файлу, его тип и размер
+      var uploadFile = {uploadPath: '', type: '', size: 0};
+      //максимальный размер файла
+      var maxSize = 2 * 1024 * 1024; //2MB
+      //поддерживаемые типы(в данном случае это картинки формата jpeg,jpg и png)
+      var supportMimeTypes = ['image/jpg', 'image/jpeg', 'image/png'];
+      //массив с ошибками произошедшими в ходе загрузки файла
+      var errors = [];
+      var dir = './public/uploads/';
+      var dirKlient = '/uploads/';
+      var filename = Math.random().toString(36)+'.png';
+
+
+      form.uploadDir ='./public/temp/';
+      form.keepExtensions = false;
+      form.type = 'multipart/form-data';
+      form.multiples = false;
+
+      form.on('error', function(err) {
+            res.send({errors:'Ошибка загрузки!'});
+        });
+
+      form.on('end', function(fields, files) {
+        console.log('end');
+      });
+
+        form.parse(req, function(err, fields, files) {
+          if (err) res.send({errors:'Ошибка загрузки!'});
+          else
+          {
+            uploadFile.size = files.file.size;
+            uploadFile.type = files.file.type;
+            uploadFile.uploadPath = files.file.path;
+            if(uploadFile.size > maxSize) {
+                errors.push('Размер файла ' + Math.round((uploadFile.size/ 1024 / 1024),2) + ' MB. Максимальный размер ' + (maxSize / 1024 / 1024) + ' MB.');
+            }
+            if(supportMimeTypes.indexOf(uploadFile.type) == -1) {
+                errors.push('Неподдерживаемый тип файла: ' + uploadFile.type);
+            }
+            if (errors.length==0)
+            fs.rename(uploadFile.uploadPath, dir+filename, function( error ) {
+                  if (error) res.send({errors:'Ошибка загрузки!'});
+                  else
+                  {
+                    uploadFile.uploadPath = dirKlient+filename;
+                    res.send({ file: uploadFile, errors: errors})
+                  }
+                }
+            )
+            else 
+            {
+              fs.unlinkSync(files.file.path);
+              res.send({errors:errors});
+            }
+           
+          }
+          
+        });
+
+  })
+
+  app.post('/removeimage',function(req,res,next){
+      var src = req.body.src;
+      fs.unlink('./public'+src, function(err){
+        console.log(err);
+               if (err) res.send('error');
+               else res.send('success');
+          });
+  })
+
+  app.post('/cropimage',function(req,res,next){
+      var image = './public'+req.body.image,
+          x = req.body.x,
+          y = req.body.y,
+          w = req.body.w,
+          h = req.body.h,      
+          width = req.body.width,
+          height = req.body.height,
+          id_user = req.body.id_user,
+          kf = req.body.kf;
+
+      im.cropImage(image,x,y,w,h,width,height,kf,function(result){
+        if (result=='success')
+          user.uploadAvatar(id_user,req.body.image,function(result_us){
+            res.send(result_us);
+          })
+      })
+      
+      
+  })
+
+
+
+
+
+
+
 }

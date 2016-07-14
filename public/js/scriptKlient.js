@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	var socket = io('http://188.225.38.167:7034');
+	var socket = io('http://127.0.0.1:7034');
 
 	if ($('#myEmoji').length>0)
 	{
@@ -24,7 +24,10 @@ $(document).ready(function(){
 			pane.jScrollPane({
 			   contentWidth: '0px'
 			});
+
 		var api = pane.data('jsp');
+
+		if (pane.attr('id')!='dialogues')
 			api.scrollTo(0,10000);
 
 		var timeout;
@@ -84,8 +87,10 @@ $(document).ready(function(){
 
 	messageInput.keypress(function (e) {
                 e = e || window.event;
-                if (e.keyCode === 13 && e.shiftKey) {
-                    $('#submitMessage').click();
+                if (e.keyCode === 13 ) {
+                	if (!e.shiftKey)
+                    	$('#submitMessage').click();
+                	else return false;
                 }
                 else
                 {
@@ -343,6 +348,153 @@ var inter;
 			$('.dialog[data-num='+msg.id_sender+']').find('.mess-text').removeClass('no-read');
 
 	})
+/*Загрузка картинок*/
+	$('#edit_photo').click(function(){
+		$('.overlay-back').fadeIn();
+	})
 
+	$('body').on('click','#editPhoto',function(){
+		$('input#avatar').click();
+	})
+
+	$('body').on('change','#avatar',function(){
+		$('#uploadAva').submit();
+	})
+
+var jcrop_api;
+function showCoords(c)
+{
+	$('#x').val(c.x);
+	$('#y').val(c.y);
+	$('#w').val(c.w);
+	$('#h').val(c.h); 
+};
+	$('body').on('submit','#uploadAva',function(){
+		$('#image').html('<img src="./images/spinner.gif" id="spinner"/>');
+		var input = $('#avatar')[0].files;
+        var data = new FormData();  
+        data.append( 'file', input[0]);
+       // console.log(input[0])
+			$.ajax({
+			    url: '/uploadimage',
+			    type: 'POST',
+			    data: data,
+		        processData: false,
+		        contentType: false,
+			    success: function(msg){
+			    	//console.log(msg)
+			      if (msg.errors.length>0)
+			      {
+			      	msg.errors.forEach(function(item,i,arr){
+			      		$('#errors').append("<label class='control-label col-md-12'>"+msg.errors[i]+"</label>");
+			      	})
+			      	setTimeout(function(){$('#errors').html('')},2000)
+			  	  }
+			  	  else
+			  	  {
+			  	  	$('#uploadAva').hide();
+			  	  	$('#image').html('<img src="'+msg.file.uploadPath+'" id="image_crop"/><br>');
+			  	  	$('#image').append('<p>Выберите область на изображении, которую Вы хотели бы видеть в качестве фото на сайте</p>')
+			  	  	$('#image').append('<button type="button" class="btn boton btn-danger" id="back">Назад</button>');
+			  	  	$('#image').append('<button type="button" class="btn boton btn-success" id="crop_but">Сохранить</button>');
+
+			  	  	
+					 if (jcrop_api)
+					jcrop_api.destroy();
+			  	  	$('#image_crop').Jcrop({
+			            onSelect:    showCoords,
+			            bgColor:     'black',
+			            bgOpacity:   .4,
+			            //setSelect:   [ 100, 100, 300, 300 ],
+			            aspectRatio: 1 / 1
+				        },function(){
+						    jcrop_api = this;
+					});
+			  	  }
+			    }
+			});
+		return false;
+	})
+
+
+	$('body').on('click','#back',function(){
+		var image = $('#image img').attr('src');
+		$.ajax({
+			type:'POST',
+			url:'/removeimage',
+			data:'src='+image,
+			success:function(data){
+				//console.log(data)
+				if (data=='success')
+				{
+					$('#image').html('');
+					$('#uploadAva').show();
+					$('#uploadAva')[0].reset();
+				}
+			}
+		})
+	})
+
+	$('body').on('click','#crop_but',function(){	
+		var image = $('#image img').attr('src'),
+			x = $('#x').val(),
+			y = $('#y').val(),
+			w = $('#w').val(),
+			h = $('#h').val(),
+			width = $('#image img').width(), 
+			height = $('#image img').height(),
+			id_user = $('#id_user').val();
+
+
+			$('#x').val(''); $('#y').val(''); $('#w').val(''); $('#h').val('');
+
+			var im = new Image();
+			im.src = image;
+			var kf = im.width/width;
+		console.log(w,h);
+		if (parseInt(w)<300||parseInt(h)<300)
+		{
+			$('#errors').html("<label class='control-label col-md-12'>Выделенная область слишком мала!</label>");
+			setTimeout(function(){$('#errors').html('')},2000)
+		}
+		else
+		{	
+			$('#image').append('<div class="loader"><img src="./images/spinner.gif" id="spinner"/></div>');
+			$.ajax({
+				type:'POST',
+				url:'/cropimage',
+				data:{
+					image:image,
+					x:x,
+					y:y,
+					w:w,
+					h:h,
+					width:width,
+					height:height,
+					id_user:id_user,
+					kf:kf
+				},
+				success:function(data){
+					if (data=='success')
+					{
+						$('#image').html('');
+						$('#uploadAva').show();
+						$('#uploadAva')[0].reset();
+						$('.avatarBig').attr('src',image+ "?" + Math.random());
+						$('.ava_top').attr('src',image+ "?" + Math.random());
+						$('.overlay-back').hide();
+					}
+				}
+			})
+		}
+	})
+
+
+	$('body').on('click','.close',function(){
+		$('#image').html('');
+		$('#uploadAva').show();
+		$('#uploadAva')[0].reset();
+		$('.overlay-back').hide();
+	})
 
 })

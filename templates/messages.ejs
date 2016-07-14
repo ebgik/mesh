@@ -19,13 +19,13 @@
 	<%if (peers!='none') {%> 
 	<%peers.forEach(function(item, i, arr){%>
 		<a href='/messcont?sel=<%-item.id%>' class='block_dialog <%if(item.id==sel.id){%>active<%}%>' data-num='<%-item.id%>'>
-			<%-item.name%>
+			<%-item.name%> <%-item.family%>
 			<i class="fa fa-times" aria-hidden="true"></i>
 		</a>	
 	<%})%>
 	<%}else{%>
 		<a href='/messcont?sel=<%-sel.id%>' class='block_dialog active' data-num='<%-sel.id%>'>
-			<%-sel.name%> 
+			<%-sel.name%> <%-sel.family%>
 			<i class="fa fa-times" aria-hidden="true"></i>
 		</a>
 	<%}%>
