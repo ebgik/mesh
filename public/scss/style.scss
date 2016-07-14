@@ -475,6 +475,11 @@ body {
       {
         outline:0;
       }
+      &.show
+      {
+        bottom:0;
+        opacity:1;
+      }
     }
     &:hover
     {

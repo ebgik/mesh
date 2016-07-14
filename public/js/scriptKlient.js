@@ -489,6 +489,9 @@ function showCoords(c)
 		}
 	})
 
+	$('.avatarBig').click(function(){
+		$('#edit_photo').toggleClass('show');
+	});
 
 	$('body').on('click','.close',function(){
 		$('#image').html('');
